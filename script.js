@@ -3,12 +3,17 @@ const context = canvas.getContext('2d');
 const grid = 15;
 const paddleHeight = grid * 5; // 80
 const maxPaddleY = canvas.height - grid - paddleHeight;
-const scoreboard = document.getElementById('scoreboard');
+
 var playerScore = 0;
 var opponentScore = 0;
 
 var paddleSpeed = 6;
 var ballSpeed = 5;
+
+var ms = setInterval(function() {
+  document.getElementById("sb1").innerHTML = playerScore;
+  document.getElementById("sb2").innerHTML = opponentScore;
+  }, 500);
 
 const leftPaddle = {
   // start in the middle of the game on the left side
@@ -56,12 +61,21 @@ function collides(obj1, obj2) {
 
 // game loop
 function loop() {
-  requestAnimationFrame(loop);
+  let var2 = requestAnimationFrame(loop);
   context.clearRect(0,0,canvas.width,canvas.height);
 
   // move paddles by their velocity
   leftPaddle.y += leftPaddle.dy;
   rightPaddle.y += rightPaddle.dy;
+
+  // paddle AI
+  if (leftPaddle.y + leftPaddle.height < ball.y){
+    leftPaddle.y += paddleSpeed - 3;
+  }else if(leftPaddle.y > ball.y){
+    leftPaddle.y -= paddleSpeed - 3;
+  }else if(ball.dy > 0){
+    leftPaddle.y += paddleSpeed - 3;
+  }
 
   // prevent paddles from going through walls
   if (leftPaddle.y < grid) {
@@ -87,6 +101,7 @@ function loop() {
   ball.x += ball.dx;
   ball.y += ball.dy;
 
+
   // prevent ball from going through walls by changing its velocity
   if (ball.y < grid) {
     ball.y = grid;
@@ -101,19 +116,26 @@ function loop() {
   if ( (ball.x < 0 || ball.x > canvas.width) && !ball.resetting) {
     ball.resetting = true;
     if(ball.x < 0){
-        playerScore++;
-    }
-    if(ball.x > canvas.width){
         opponentScore++;
     }
-    scoreboard.innerText = `${opponentScore}: ${playerScore}`
-  
-    // give some time for the player to recover before launching the ball again
+    if(ball.x > canvas.width){
+        playerScore++;
+    }
+
     setTimeout(() => {
       ball.resetting = false;
       ball.x = canvas.width / 2;
       ball.y = canvas.height / 2;
     }, 400);
+  }
+
+  //Check if score == 7
+  if(playerScore === 7 || opponentScore === 7){
+    playerScore = 0;
+    opponentScore = 0;
+    context.clearRect(0,0,canvas.width,canvas.height);
+    cancelAnimationFrame(var2);
+    return endGame();
   }
 
   // check to see if ball collides with paddle. if they do change x velocity
@@ -158,14 +180,6 @@ document.addEventListener('keydown', function(e) {
     rightPaddle.dy = paddleSpeed;
   }
 
-  // w key
-  if (e.which === 87) {
-    leftPaddle.dy = -paddleSpeed;
-  }
-  // a key
-  else if (e.which === 83) {
-    leftPaddle.dy = paddleSpeed;
-  }
 });
 
 // listen to keyboard events to stop the paddle if key is released
@@ -174,10 +188,25 @@ document.addEventListener('keyup', function(e) {
     rightPaddle.dy = 0;
   }
 
-  if (e.which === 83 || e.which === 87) {
-    leftPaddle.dy = 0;
-  }
 });
+
+
+
+function endGame(){
+  document.getElementById("ggs").style.display = "block";
+}
+
+function restartGame(){
+  document.getElementById("ggs").style.display = "none";
+  ballSpeed = 5;
+  ball.resetting = false;
+  ball.x = canvas.width /2;
+  ball.y = canvas.height/2;
+  ball.dx = -ballSpeed;
+  rightPaddle.y = canvas.height / 2;
+  leftPaddle.y = canvas.height / 2;
+  requestAnimationFrame(loop);
+}
 
 // start the game
 requestAnimationFrame(loop);

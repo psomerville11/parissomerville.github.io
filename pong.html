@@ -6,10 +6,21 @@
   <link rel = "stylesheet" href = "style.css">
 </head>
 <body>
-  <h1 id = "scoreboard"> 0 : 0 </h1>
-<canvas width="750" height="585" id="game"></canvas>
-<script src = "script.js"> 
+<div class = "scoreboard">
+  <div class = "scoreboard__name">Player One</div>
+  <div class = "scoreboard__name">Player Two</div>
+  <div class = "scoreboard__score1" id = "sb1"></div>
+  <div class = "scoreboard__score2" id = "sb2"></div>
+</div>
 
-</script>
+  <div class = "endGame" id ="ggs">
+    <h1 class = "gameOver"> Game Over!</h1>
+    <button onclick = "restartGame();" class = "playAgain">Play Again</button>
+  </div>
+
+  <canvas width = "750" height= "585" id= "game"></canvas>
+  <script src = "script.js"></script>
+
+
 </body>
 </html>

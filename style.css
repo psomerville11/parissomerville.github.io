@@ -4,10 +4,55 @@ html, body {
   }
 
   body {
-    background: black;
+    background: rgb(166, 79, 79);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
   }
-  #scoreboard{color: pink}
+
+.scoreboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 750px;
+  font-family: 'Quicksand', sans-serif;
+  text-align: center;
+}
+
+.scoreboard__name,
+.scoreboard__score1,
+.scoreboard__score2 {
+    padding: 10px;
+    text-align: center;
+}
+
+.scoreboard__name {
+    font-weight: bold;
+    border-bottom: 1px solid #ddd;
+}
+
+.scoreboard__score1,
+.scoreboard__score2 {
+    font-size: 2em;
+}
+
+.endGame{
+    display: none;
+    position: fixed;
+    text-align: center;
+    font-family: 'Quicksand', sans-serif;
+    z-index: 0;
+    
+}
+.gameOver{
+    font-size: 40px;
+}
+
+.playAgain{
+    font-size: 25px;
+    font-family: 'Quicksand', sans-serif;
+    color: rgb(166, 79, 79);
+    height:70px;
+    width: 150px;
+    
+}
